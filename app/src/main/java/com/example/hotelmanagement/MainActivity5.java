@@ -1,33 +1,135 @@
 package com.example.hotelmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.os.Bundle;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+//import org.json.parser.JSONParser;
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity5 extends AppCompatActivity
 {
     // get instances of AutoCompleteTextView and TextView
-    AutoCompleteTextView itemNA,qtyNA;
+    AutoCompleteTextView itemNA,qtyNA,itemCty;
+    TextInputEditText itemNT;
+    ImageButton add_item;
+    MaterialButton plc_odr;
+    RecyclerView t_i;
+    TextView C_Name,T2;
+    String Tno="1";
+    String Tid="1";
+    String Tstate="Busy";
+    String Cname="Krish";
+    String Cno="";
+    String s2="";
+    ArrayList<String> items2=new ArrayList<>();
+    ArrayList<String> Cty2=new ArrayList<>();
 
-    String items[] = {
-            "Schezwan Noodles",
-            "Schezwan Fried Rice",
-            "Paneer Fried Rice",
-            "Paneer Manchurian Dry",
-            "Veg Momos",
-            "Momos Chutney",
-            "Veg Spring Rolls"
-    };
-    String qtys[]={
+
+//    String s1=
+//            "{" +
+//                    "\"Gujarati\": [" +
+//                        "\"Khandvi\"," +
+//                        "\"Dhokala\"," +
+//                        "\"Shrikhand\"," +
+//                        "\"Kadhi-Khichadi\"," +
+//                        "\"Thepla\"," +
+//                        "\"Dal Dhokli\"" +
+//                    "]," +
+//                    "\"Panjabi\": [" +
+//                        "\"Chole Bhature\"," +
+//                        "\"Masala Channa\"," +
+//                        "\"Dal Makhani\"," +
+//                        "\"Machchli Amritsari\"," +
+//                        "\"Dhaba Dal\"" +
+//                    "]," +
+//                    "\"South\": [" +
+//                        "\"Tamarind Rice\", " +
+//                        "\"Pulihora\"," +
+//                        "\"Puliyogare\"," +
+//                        "\"Veg Kerala Biryani\"," +
+//                        "\"Malabar Veg Biryani\"," +
+//                        "\"Dhosa\"," +
+//                        "\"Idali\"" +
+//                    "]," +
+//                    "\"Chineese\": [" +
+//                        "\"Schezwan Noodles\"," +
+//                        "\"Schezwan Fried Rice\"," +
+//                        "\"Paneer Fried Rice\"," +
+//                        "\"Paneer Manchurian Dry\"," +
+//                        "\"Veg Momos\"," +
+//                        "\"Momos Chutney\"," +
+//                        "\"Dry Manchurian\"," +
+//                        "\"Gravy Manchurian\"," +
+//                        "\"Veg Spring Rolls\"" +
+//                    "]" +
+//                    "}";
+
+//    String[] items1 = {
+//            "Schezwan Noodles",
+//            "Schezwan Fried Rice",
+//            "Paneer Fried Rice",
+//            "Paneer Manchurian Dry",
+//            "Veg Momos",
+//            "Dry Manchurian",
+//            "Gravy Manchurian",
+//            "Momos Chutney",
+//            "Veg Spring Rolls",
+//            "Khandvi",
+//            "Dhokala",
+//            "Shrikhand",
+//            "Kadhi-Khichadi",
+//            "Thepla",
+//            "Dal Dhokli",
+//            "Chole Bhature",
+//            "Masala Channa",
+//            "Dal Makhani",
+//            "Machchli Amritsari",
+//            "Dhaba Dal",
+//            "Tamarind Rice",
+//            "Pulihora",
+//            "Puliyogare",
+//            "Veg Kerala Biryani",
+//            "Malabar Veg Biryani",
+//            "Dhosa",
+//            "Idali"
+//    };
+//    String[] Cty1 = {
+//            "Gujarati",
+//            "Panjabi",
+//            "South",
+//            "Chineese"
+//    };
+    String[] qtys ={
             "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,14 +137,147 @@ public class MainActivity5 extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main5);
 
+        plc_odr=findViewById(R.id.plc_odr);
+        //API
+        String url=getString(R.string.base_url)+"/item/allItem";
+        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET,url,null, response -> {
+            try {
+                JSONArray message_array=response.getJSONArray("message");
+                //for items2 and Cty2
+                int k=0;
+                s2=s2.concat("{");
+                int mal=message_array.length();
+                for (int i = 0; i < mal; i++) {
+                    int mvl=message_array.getJSONObject(i).getJSONArray("value").length();
+                    Cty2.add(message_array.getJSONObject(i).getString("category"));
+                    s2=s2.concat("\""+ Cty2.get(i) +"\": [");
+                    for (int j = 0; j < mvl; j++) {
+                        items2.add(message_array.getJSONObject(i).getJSONArray("value").getJSONObject(j).getString("name"));
+                        s2=s2.concat("\""+ items2.get(k) +"\"");
+                        if (j<mvl-1) {s2=s2.concat(",");}
+                        k=k+1;
+                    }
+                    s2=s2.concat("]");
+                    if (i<mal-1) {s2=s2.concat(",");}
+                }
+                s2=s2.concat("}");
+//                Log.d("****************************************************",s2);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }, error -> {
+
+        }
+        );
+        RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
+        queue.add(jor);
+
+        //Data from another Activity
+        if (getIntent().hasExtra("T_data")) {
+            ArrayList<String> T_data = getIntent().getExtras().getStringArrayList("T_data");
+            Tno = T_data.get(0);
+            Tid = T_data.get(1);
+            Tstate = T_data.get(2);
+        }
+        if (getIntent().hasExtra("C_data")) {
+            ArrayList<String> C_data = getIntent().getExtras().getStringArrayList("C_data");
+            Tno = C_data.get(0);
+            Tid = C_data.get(1);
+            Tstate = C_data.get(2);
+            Cname = C_data.get(3);
+            Cno = C_data.get(4);
+        }
+        T2=findViewById(R.id.T2);
+        T2.setText(Tno);
+        C_Name=findViewById(R.id.C_Name);
+        C_Name.setText(Cname);
+
+        t_i=findViewById(R.id.t_i);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        List<Order> Olist = new ArrayList<>();
+//        Olist.add(new Order("1","tid","Schezwan Noodles","3","Spicy","Order"));
+//        Olist.add(new Order("1","tid","Schezwan Fried Rice","2","","Process"));
+//        Olist.add(new Order("1","tid","Paneer Fried Rice","1","","Order"));
+//        Olist.add(new Order("1","tid","Paneer Manchurian Dry","3","","Tacking"));
+//        Olist.add(new Order("1","tid","Veg Momos","3","Extra Cheese","Deliver"));
+//        Olist.add(new Order("1","tid","Momos Chutney","3","Spicy","Order"));
+        t_i.setLayoutManager(gridLayoutManager);
+
+        itemNT=findViewById(R.id.itemNT);
+        add_item=findViewById(R.id.add_item);
+        add_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String i_name=itemNA.getText().toString().trim();
+                String i_qty=qtyNA.getText().toString().trim();
+                String i_note=itemNT.getText().toString().trim();
+                if(TextUtils.isEmpty(i_qty) || TextUtils.isEmpty(i_name)) {
+                    if(TextUtils.isEmpty(i_qty) && TextUtils.isEmpty(i_name)){
+                        Toast.makeText(getApplicationContext(), "Please enter a item name and qty..!!", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (TextUtils.isEmpty(i_name)) {
+                        Toast.makeText(getApplicationContext(), "Please enter a item name..!!", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Please enter a item qty..!!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Olist.add(new Order(Tno,Tid,i_name,i_qty,i_note,"Tacking"));
+//                    order_list(Tno,Tid,i_name,i_qty,i_note,"Tacking");
+                    Toast.makeText(getApplicationContext(), "Item: "+i_name+"*"+i_qty+" ("+i_note+") "+"added.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        OrderListAdapter orderListAdapter=new OrderListAdapter(Olist, this, new OrderListAdapter.OnItemClickListener() {
+            @Override
+            public void onDelete(int position) {
+                Olist.remove(position);
+                t_i.getAdapter().notifyDataSetChanged();
+            }
+        });
+        t_i.setAdapter(orderListAdapter);
+        //AutoCompleteTextView
         itemNA = findViewById(R.id.itemNA);
+        itemCty=findViewById(R.id.itemCty);
         qtyNA=findViewById(R.id.qtyNA);
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,items);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, items2);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,qtys);
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, Cty2);
+
 
         itemNA.setAdapter(adapter1);
         qtyNA.setAdapter(adapter2);
-        qtyNA.setText("1");
+        itemCty.setAdapter(adapter3);
+        itemCty.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String item = adapterView.getItemAtPosition(i).toString();
+
+                JSONArray catItemArray = null;
+                try {
+                    catItemArray = (new JSONObject(s2)).getJSONArray(item);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                List<String> itemList = new ArrayList<String>();
+                for(int j=0; j< catItemArray.length(); j++){
+                    try {
+                        itemList.add(catItemArray.getString(j));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                int size = itemList.size();
+                String[] itemArray = itemList.toArray(new String[size]);
+//                Log.d("itemArray",itemArray.toString());
+                ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(MainActivity5.this,android.R.layout.simple_list_item_1,itemArray);
+                itemNA.setAdapter(adapter4);
+            }
+        });
         itemNA.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -67,5 +302,34 @@ public class MainActivity5 extends AppCompatActivity
                 qtyNA.setText(qty);
             }
         });
+        plc_odr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("888888888888888888", String.valueOf(Olist.get(1).I_Name));
+
+            }
+        });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent b=new Intent(getApplicationContext(),MainActivity3.class);
+        startActivity(b);
+    }
+
+
+    //    private void order_list(String tno, String tid, String i_name, String i_qty, String i_note, String tacking) {
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+//        List<Order> Olist = new ArrayList<>();
+//        Olist.add(new Order(Tno,Tid,i_name,i_qty,i_note,tacking));
+////        Olist.add(new Order("1","tid","Schezwan Noodles","3","Spicy","Order"));
+////        Olist.add(new Order("1","tid","Schezwan Fried Rice","2","","Process"));
+////        Olist.add(new Order("1","tid","Paneer Fried Rice","1","","Order"));
+////        Olist.add(new Order("1","tid","Paneer Manchurian Dry","3","","Tacking"));
+////        Olist.add(new Order("1","tid","Veg Momos","3","Extra Cheese","Deliver"));
+////        Olist.add(new Order("1","tid","Momos Chutney","3","Spicy","Order"));
+//        t_i.setLayoutManager(gridLayoutManager);
+//
+//    }
 }

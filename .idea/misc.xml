@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/add_corner.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/buttonboder.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/buttonborder.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/buttonborder1.xml" value="0.26614583333333336" />
@@ -13,18 +14,26 @@
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_backspace_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_control_point_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_edit_note_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_fastfood_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_food_bank_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_baseline_trans.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/ic_marriott_hotels_resorts_logo_png_transparent_2.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/drawable/shadec.xml" value="0.26614583333333336" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/activity_main.xml" value="0.24048913043478262" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/activity_main2.xml" value="0.25" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/activity_main3.xml" value="0.25" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/activity_main4.xml" value="0.264" />
-        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/activity_main5.xml" value="0.25" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/activity_main5.xml" value="0.264" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/activity_main6.xml" value="0.25" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/card_item.xml" value="0.264" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/grid_view_items.xml" value="0.25" />
         <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/list_item_books.xml" value="0.25" />
+        <entry key="..\:/Android studio/HotelManagement/app/src/main/res/layout/table_item.xml" value="0.264" />
       </map>
     </option>
   </component>

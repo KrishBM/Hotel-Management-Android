@@ -1,47 +1,115 @@
 package com.example.hotelmanagement;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.GridView;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+
 public class MainActivity3 extends AppCompatActivity {
 
-//    GridView GridT;
 
-
+    private Socket socket;
+    private SwipeRefreshLayout swipeContainer1;
     RecyclerView r_v;
+    int TotleTable,tableNos;
+    String statuss,tableids;
+    int flag=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
-        r_v=findViewById(R.id.r_v);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        List<Tables> list = new ArrayList<>();
-        list.add(new Tables("1","tid","Free"));
-        list.add(new Tables("2","tid","Busy"));
-        list.add(new Tables("3","tid","Payment"));
-        list.add(new Tables("4","tid","Free"));
-        list.add(new Tables("5","tid","Busy"));
-        list.add(new Tables("6","tid","Free"));
-        list.add(new Tables("7","tid","Busy"));
-        list.add(new Tables("8","tid","Payment"));
-        list.add(new Tables("9","tid","Busy"));
-        list.add(new Tables("10","tid","Free"));
-        list.add(new Tables("11","tid","Busy"));
-        list.add(new Tables("12","tid","Payment"));
-        list.add(new Tables("13","tid","Free"));
-        list.add(new Tables("14","tid","Busy"));
-        r_v.setLayoutManager(gridLayoutManager);
-        r_v.setAdapter(new BooksListAdapter(list,this));
+        refresh();
+        swipeContainer1 = findViewById(R.id.swipeContainer1);
+        swipeContainer1.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        swipeContainer1.setColorSchemeResources(android.R.color.holo_orange_light);
+
+//        socket.on("listenStatus",listionS);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refresh();
+    }
+
+    protected void refresh(){
+        String url=getString(R.string.base_url)+"/table/getAllLiveTable";
+
+        JsonArrayRequest jor = new JsonArrayRequest(Request.Method.GET,url,null, response -> {
+
+            TotleTable=response.length();
+
+            r_v=findViewById(R.id.r_v);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+            List<Tables> list = new ArrayList<>();
+            for (int i = 1; i <= TotleTable; i++) {
+                try {
+                    tableNos=response.getJSONObject(i-1).getInt("tableNo");
+//                    System.out.println(tableNos);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    statuss=response.getJSONObject(i-1).getString("status");
+//                    System.out.println(statuss);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    tableids=response.getJSONObject(i-1).getString("_id");
+//                    System.out.println(tableids);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                list.add(new Tables(String.valueOf(tableNos),tableids,String.valueOf(statuss)));
+            }
+
+//            list.add(new Tables("1","tid","Free"));
+//            list.add(new Tables("2","tid","Busy"));
+//            list.add(new Tables("3","tid","Payment"));
+
+
+            r_v.setLayoutManager(gridLayoutManager);
+            r_v.setAdapter(new TableListAdapter(list,this));
+
+        }, error -> {
+
+        }
+        );
+        RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
+        queue.add(jor);
+        if(flag==0){
+            flag=1;
+        }
+        else {
+            swipeContainer1.setRefreshing(false);
+        }
+
     }
 }
