@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Hotel Management</string>
-    <string name="base_url">http://13.126.70.189:3001</string>
+    <string name="base_url">http://65.2.127.123:3001</string>
+    <string name="base_so">ws://65.2.127.123:3001</string>
+    <string name="base_url1">http://localhost:3001</string>
+    <string name="base_so1">ws://localhost:3001</string>
 </resources>

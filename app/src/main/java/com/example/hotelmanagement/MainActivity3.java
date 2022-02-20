@@ -1,5 +1,7 @@
 package com.example.hotelmanagement;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -19,35 +21,33 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
 
 public class MainActivity3 extends AppCompatActivity {
 
-
-    private Socket socket;
     private SwipeRefreshLayout swipeContainer1;
     RecyclerView r_v;
     int TotleTable,tableNos;
     String statuss,tableids;
     int flag=0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        Log.d("878787878787","c3");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
         refresh();
         swipeContainer1 = findViewById(R.id.swipeContainer1);
-        swipeContainer1.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
+        swipeContainer1.setOnRefreshListener(this::refresh);
         swipeContainer1.setColorSchemeResources(android.R.color.holo_orange_light);
 
+        socp ss=socp.getInstance(this);
+//        Log.d("7878787878",ss.toString());
+        ss.getSocket().on("listenStatus",listionS);
 //        socket.on("listenStatus",listionS);
 
     }
@@ -58,7 +58,9 @@ public class MainActivity3 extends AppCompatActivity {
         refresh();
     }
 
-    protected void refresh(){
+    public void refresh(){
+//        Log.d("878787878787","r3");
+
         String url=getString(R.string.base_url)+"/table/getAllLiveTable";
 
         JsonArrayRequest jor = new JsonArrayRequest(Request.Method.GET,url,null, response -> {
@@ -66,6 +68,7 @@ public class MainActivity3 extends AppCompatActivity {
             TotleTable=response.length();
 
             r_v=findViewById(R.id.r_v);
+
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
             List<Tables> list = new ArrayList<>();
             for (int i = 1; i <= TotleTable; i++) {
@@ -98,6 +101,7 @@ public class MainActivity3 extends AppCompatActivity {
             r_v.setLayoutManager(gridLayoutManager);
             r_v.setAdapter(new TableListAdapter(list,this));
 
+
         }, error -> {
 
         }
@@ -112,4 +116,23 @@ public class MainActivity3 extends AppCompatActivity {
         }
 
     }
+    private final Emitter.Listener listionS = args -> {
+//        Log.d("878787878787","socp");
+        refresh();
+//        Log.d("878787878787","em3");
+        JSONObject data = (JSONObject) args[0];
+//                    Log.d("5555555555", String.valueOf(data));
+        String lTno;
+        String lTstatus;
+        try {
+            lTno = data.getString("tableNo");
+            lTstatus = data.getString("status");
+//                Log.d("98989898989",lTstatus);
+//                mTables.get(Integer.parseInt(lTno)-1).T_state=lTstatus;
+//                Log.d("5555555555",mTables.get(Integer.parseInt(lTno)-1).T_state);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    };
 }

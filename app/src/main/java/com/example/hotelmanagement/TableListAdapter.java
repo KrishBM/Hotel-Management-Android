@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.hotelmanagement.socp.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,54 +23,32 @@ import java.util.List;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-
+import static com.example.hotelmanagement.MainActivity3.*;
 public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.MyViewHolder>{
 
     List<Tables> mTables;
     Context mContext;
 
-    private Socket socket;
-    {
-        try {
-            socket = IO.socket("http://13.126.70.189:3001");
-            socket.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private Socket socket;
+//    {
+//        try {
+//            socket = IO.socket("http://13.126.70.189:3001");
+//            socket.connect();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public TableListAdapter(List<Tables> tables, Context context) {
         mTables = tables;
         mContext = context;
     }
 
-    private Emitter.Listener listionS = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
 
-
-            JSONObject data = (JSONObject) args[0];
-//                    Log.d("5555555555", String.valueOf(data));
-            String lTno;
-            String lTstatus;
-            try {
-                lTno = data.getString("tableNo");
-                lTstatus = data.getString("status");
-
-                mTables.get(Integer.parseInt(lTno)-1).T_state=lTstatus;
-                Log.d("5555555555",mTables.get(Integer.parseInt(lTno)-1).T_state);//TODO table state change
-            } catch (JSONException e) {
-                return;
-            }
-
-        }
-
-
-    };
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        socket.on("listenStatus",listionS);
+
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_table, parent, false);
         return new MyViewHolder(v);

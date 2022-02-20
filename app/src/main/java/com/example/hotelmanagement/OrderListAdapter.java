@@ -2,21 +2,16 @@ package com.example.hotelmanagement;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.MyViewHolder>{
@@ -44,43 +39,36 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.MyVi
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Order tables = mTables.get(position);
 
-        if(tables.getI_State()=="Process" || tables.getI_State()=="Deliver"){
+        if(tables.getI_State().equals("Process") || tables.getI_State().equals("Deliver")){
             holder.tb2.setVisibility(View.INVISIBLE);
-            if(tables.getI_State()=="Process"){
+            if(tables.getI_State().equals("Process")){
                 holder.is.setTextColor(mContext.getColor(R.color.brown));
             }
-            else if(tables.getI_State()=="Deliver"){
+            else if(tables.getI_State().equals("Deliver")){
                 holder.is.setTextColor(mContext.getColor(R.color.purple_500));
             }
         }
         else {
             holder.tb1.setVisibility(View.VISIBLE);
         }
-        if(tables.getI_State()=="Order"){
+        if(tables.getI_State().equals("Order")){
             holder.is.setTextColor(mContext.getColor(R.color.green));
         }
-        else if(tables.getI_State()=="Tacking"){
+        else if(tables.getI_State().equals("Taking")){
             holder.is.setTextColor(mContext.getColor(R.color.red));
         }
 
         holder.in.setText(tables.getI_Name());
         holder.is.setText(tables.getI_State());
         holder.iq.setText(tables.getI_Qty());
-        holder.tb1.setOnClickListener(v->{
-            Toast.makeText(mContext.getApplicationContext(), tables.getI_Note(), Toast.LENGTH_SHORT).show();
-        });
+        holder.tb1.setOnClickListener(v-> Toast.makeText(mContext.getApplicationContext(), tables.getI_Note(), Toast.LENGTH_SHORT).show());
         if(tables.getI_Note().isEmpty()){
             holder.tb1.setVisibility(View.INVISIBLE);
         }
         else {
             holder.tb1.setVisibility(View.VISIBLE);
         }
-        holder.tb2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemClickListener.onDelete(position);
-            }
-        });
+        holder.tb2.setOnClickListener(view -> onItemClickListener.onDelete(position));
     }
     public interface OnItemClickListener{
         void onDelete(int position);
@@ -90,7 +78,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.MyVi
         return mTables.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageButton tb1,tb2;
         TextView in,iq,is;
 

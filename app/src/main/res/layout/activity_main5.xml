@@ -96,13 +96,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:paddingHorizontal="20dp"
-        android:weightSum="3"
+        android:weightSum="5"
         android:orientation="horizontal">
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:layout_marginEnd="5dp"
             android:hint="Cty."
             android:textColorHint="@color/yello_1"
@@ -130,7 +130,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_marginEnd="5dp"
             android:hint="Item Name"
             android:textColorHint="@color/yello_1"
@@ -188,10 +188,11 @@
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginEnd="5dp"
+            android:hint="Qty."
             android:textColorHint="@color/yello_1"
             app:boxCornerRadiusTopStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
@@ -201,7 +202,7 @@
             >
             <AutoCompleteTextView
                 android:id="@+id/qtyNA"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:textColor="@color/yello_2"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"

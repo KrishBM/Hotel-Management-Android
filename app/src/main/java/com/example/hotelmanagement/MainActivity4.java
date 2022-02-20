@@ -25,29 +25,29 @@ import java.util.Objects;
 
 public class MainActivity4 extends AppCompatActivity {
 
-    private Socket socket;
     Button b1;
+    Socket socket;
     TextInputEditText TIET1,TIET2;
     String name,number;
     TextView T2;
 //    String Tno="1",Tid="1",Tstate="Busy";   TODO:inicial input
     String Tno,Tid,Tstate;
 
-    {
-        try {
-            socket = IO.socket("http://13.126.70.189:3001");
-            socket.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    {
+//        try {
+//            socket = IO.socket(getString(R.string.base_url));
+//            socket.connect();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
 
-        socket.connect();
+//        socket.connect();
 //        Log.d("5555555555555", String.valueOf(socket));
 
         b1=findViewById(R.id.b1);
@@ -123,8 +123,11 @@ public class MainActivity4 extends AppCompatActivity {
                     cTableState.put("tableNo",Tno);
                     cTableState.put("status","Busy");
 
-                    socket.emit("change_table_status", new JSONObject(cTableState));
-                    socket.on("listenStatus",listionS);
+//                    socket.emit("change_table_status", new JSONObject(cTableState));
+//                    socket.on("listenStatus",listionS);
+                    socp ss=socp.getInstance(this);
+                    ss.getSocket().emit("change_table_status", new JSONObject(cTableState));
+                    ss.getSocket().on("listenStatus",listionS);
 
                     Intent i = new Intent(getApplicationContext(),MainActivity5.class);
 
@@ -143,28 +146,28 @@ public class MainActivity4 extends AppCompatActivity {
     private final Emitter.Listener listionS = args -> {
 
 
-                JSONObject data = (JSONObject) args[0];
-//                    Log.d("5555555555", String.valueOf(data));
-                String lTno;
-                String lTstatus;
-                try {
-                    lTno = data.getString("tableNo");
-                    lTstatus = data.getString("status");
-
-//                        Intent i1 = new Intent(getApplicationContext(),MainActivity3.class);
+//                JSONObject data = (JSONObject) args[0];
+////                    Log.d("5555555555", String.valueOf(data));
+//                String lTno;
+//                String lTstatus;
+//                try {
+//                    lTno = data.getString("tableNo");
+//                    lTstatus = data.getString("status");
 //
-//                        ArrayList<String> S_busy=new ArrayList<String>();
-//                        S_busy.add(Tno);
-//                        S_busy.add(Tid);
-//                        S_busy.add(Tstate);
-//                        S_busy.add(name);
-//                        S_busy.add(number);
-//                        i1.putStringArrayListExtra("S_data", S_busy);
-//                        startActivity(i1);
-                    Log.d("5555555555",lTno);//TODO table state change
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+////                        Intent i1 = new Intent(getApplicationContext(),MainActivity3.class);
+////
+////                        ArrayList<String> S_busy=new ArrayList<String>();
+////                        S_busy.add(Tno);
+////                        S_busy.add(Tid);
+////                        S_busy.add(Tstate);
+////                        S_busy.add(name);
+////                        S_busy.add(number);
+////                        i1.putStringArrayListExtra("S_data", S_busy);
+////                        startActivity(i1);
+////                    Log.d("5555555555",lTno);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 
             };
 }
