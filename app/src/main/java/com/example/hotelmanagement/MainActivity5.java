@@ -44,7 +44,7 @@ public class MainActivity5 extends AppCompatActivity
     String Cno="";
     String s2="";
     int flag=0;
-    String itemNames,itemQtys,itemNotes,itemStatus;
+    String itemNames,itemQtys,itemNotes,itemStatus,orderId;
     ArrayList<String> items2=new ArrayList<>();
     ArrayList<String> Cty2=new ArrayList<>();
     Map<String, String> itemWithId= new HashMap<>();
@@ -55,6 +55,12 @@ public class MainActivity5 extends AppCompatActivity
     List<Order> Olist = new ArrayList<>();//todo
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);//todo
     OrderListAdapter orderListAdapter=new OrderListAdapter(Olist, this, position -> {
+        if(Olist.get(position).getI_State().equals("Order")){
+            Map<String, String> deletOrder= new HashMap<>();
+            deletOrder.put("_id",Olist.get(position).getO_id());
+            socp ss=socp.getInstance(this);
+            ss.getSocket().emit("delete_order", new JSONObject(deletOrder));
+        }
         Olist.remove(position);
         t_i.getAdapter().notifyDataSetChanged();
         Toast.makeText(getApplicationContext(),"Item Removed..!",Toast.LENGTH_SHORT).show();
@@ -162,7 +168,7 @@ public class MainActivity5 extends AppCompatActivity
                 }
             }
             else {
-                Olist.add(new Order(Tno,Tid,i_name,i_qty,i_note,"Taking"));
+                Olist.add(new Order(Tno,Tid,i_name,i_qty,i_note,"Taking","61dfef6242b75ad557216a17"));
                 t_i.getAdapter().notifyDataSetChanged();
 //                    order_list(Tno,Tid,i_name,i_qty,i_note,"Tacking");
                 Toast.makeText(getApplicationContext(), "Item: "+i_name+"("+i_qty+") "+"added.", Toast.LENGTH_SHORT).show();
@@ -272,9 +278,22 @@ public class MainActivity5 extends AppCompatActivity
                     params.put("key","value");
                     return params;
                 }
+
+
+
+
             };
             RequestQueue queue1 = Volley.newRequestQueue(getApplicationContext());
             queue1.add(jsonArrayRequest);
+
+//            for (int i = 0; i < Olist.size(); i++) {
+//                if(Olist.get(i).I_State.equals("Taking")){
+//                    Olist.get(i).I_State="Order";
+//                }
+//            }//todo
+
+            refreshOrder();//todo************************
+//            t_i.getAdapter().notifyDataSetChanged();//todo
             Toast.makeText(getApplicationContext(),"Order place succsessfully...!!",Toast.LENGTH_SHORT).show();
 
 //                Map<String, String> cTableState= new HashMap<>();
@@ -349,8 +368,14 @@ public class MainActivity5 extends AppCompatActivity
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                try {
+                    orderId = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getString("_id");
+//                    System.out.println(itemStatus);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                Olist.add(new Order(Tno,Tid,itemNames,itemQtys,itemNotes,itemStatus));
+                Olist.add(new Order(Tno,Tid,itemNames,itemQtys,itemNotes,itemStatus,orderId));
                 t_i.getAdapter().notifyDataSetChanged();
             }
 

@@ -4,15 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Order implements Parcelable {
-    String T_no,T_id,C_Name,C_No,I_Name,I_Qty,I_Note,I_State;
+    String T_no,T_id,C_Name,C_No,I_Name,I_Qty,I_Note,I_State,O_id;
 
-    public Order(String t_no, String t_id, String i_Name, String i_Qty, String i_Note, String i_State) {
+    public Order(String t_no, String t_id, String i_Name, String i_Qty, String i_Note, String i_State,String o_Id) {
         T_no = t_no;
         T_id = t_id;
         I_Name = i_Name;
         I_Qty = i_Qty;
         I_Note = i_Note;
         I_State = i_State;
+        O_id=o_Id;
     }
 
     protected Order(Parcel in) {
@@ -24,6 +25,7 @@ public class Order implements Parcelable {
         I_Qty = in.readString();
         I_Note = in.readString();
         I_State = in.readString();
+        O_id=in.readString();
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -102,6 +104,14 @@ public class Order implements Parcelable {
         I_State = i_State;
     }
 
+    public String getO_id() {
+        return O_id;
+    }
+
+    public void setO_id(String o_id) {
+        O_id = o_id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -117,5 +127,6 @@ public class Order implements Parcelable {
         parcel.writeString(I_Qty);
         parcel.writeString(I_Note);
         parcel.writeString(I_State);
+        parcel.writeString(O_id);
     }
 }
