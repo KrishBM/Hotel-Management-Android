@@ -292,14 +292,14 @@
 
         <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginVertical="30dp"
         android:weightSum="2"
         android:orientation="horizontal"
         android:layout_marginHorizontal="50dp">
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Place Order"
             android:id="@+id/plc_odr"
@@ -310,7 +310,7 @@
             android:layout_marginEnd="10dp"/>
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Cancel"
             android:layout_weight="1"
             android:background="@drawable/buttonborder3"

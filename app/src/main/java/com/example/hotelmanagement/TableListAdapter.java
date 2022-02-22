@@ -29,21 +29,10 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.MyVi
     List<Tables> mTables;
     Context mContext;
 
-//    private Socket socket;
-//    {
-//        try {
-//            socket = IO.socket("http://13.126.70.189:3001");
-//            socket.connect();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public TableListAdapter(List<Tables> tables, Context context) {
         mTables = tables;
         mContext = context;
     }
-
 
     @NonNull
     @Override

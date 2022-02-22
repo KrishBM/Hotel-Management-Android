@@ -30,25 +30,12 @@ public class MainActivity4 extends AppCompatActivity {
     TextInputEditText TIET1,TIET2;
     String name,number;
     TextView T2;
-//    String Tno="1",Tid="1",Tstate="Busy";   TODO:inicial input
     String Tno,Tid,Tstate;
-
-//    {
-//        try {
-//            socket = IO.socket(getString(R.string.base_url));
-//            socket.connect();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
-
-//        socket.connect();
-//        Log.d("5555555555555", String.valueOf(socket));
 
         b1=findViewById(R.id.b1);
         T2=findViewById(R.id.T2);
@@ -62,8 +49,6 @@ public class MainActivity4 extends AppCompatActivity {
         Tstate= T_data.get(2);
         T2.setText(Tno);
         }
-
-
 
         b1.setOnClickListener(view -> {
             name = Objects.requireNonNull(TIET1.getText()).toString();
@@ -81,12 +66,7 @@ public class MainActivity4 extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Name: " + name + "\n" + "Number: " + number, Toast.LENGTH_LONG).show();
 
                     String url=getString(R.string.base_url)+"/customer/addCustomer";
-//                        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
-//                            @Override
-//                            public void onResponse(JSONObject response) {
-//
-//                            }
-//                        },
+
                     Map<String, String> postParam= new HashMap<>();
                     postParam.put("name",name);
                     if(number.length()==0){
@@ -101,9 +81,7 @@ public class MainActivity4 extends AppCompatActivity {
                     JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                             url, new JSONObject(postParam),
                             response -> {
-//                                        Log.d(TAG, response.toString());
-//                                        msgResponse.setText(response.toString());
-//                                        hideProgressDialog();
+
                             },
                             error -> {
 
@@ -123,8 +101,6 @@ public class MainActivity4 extends AppCompatActivity {
                     cTableState.put("tableNo",Tno);
                     cTableState.put("status","Busy");
 
-//                    socket.emit("change_table_status", new JSONObject(cTableState));
-//                    socket.on("listenStatus",listionS);
                     socp ss=socp.getInstance(this);
                     ss.getSocket().emit("change_table_status", new JSONObject(cTableState));
                     ss.getSocket().on("listenStatus",listionS);
@@ -145,29 +121,5 @@ public class MainActivity4 extends AppCompatActivity {
     }
     private final Emitter.Listener listionS = args -> {
 
-
-//                JSONObject data = (JSONObject) args[0];
-////                    Log.d("5555555555", String.valueOf(data));
-//                String lTno;
-//                String lTstatus;
-//                try {
-//                    lTno = data.getString("tableNo");
-//                    lTstatus = data.getString("status");
-//
-////                        Intent i1 = new Intent(getApplicationContext(),MainActivity3.class);
-////
-////                        ArrayList<String> S_busy=new ArrayList<String>();
-////                        S_busy.add(Tno);
-////                        S_busy.add(Tid);
-////                        S_busy.add(Tstate);
-////                        S_busy.add(name);
-////                        S_busy.add(number);
-////                        i1.putStringArrayListExtra("S_data", S_busy);
-////                        startActivity(i1);
-////                    Log.d("5555555555",lTno);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-
-            };
+    };
 }

@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
@@ -64,7 +65,7 @@ public class MainActivity5 extends AppCompatActivity
         Olist.remove(position);
         t_i.getAdapter().notifyDataSetChanged();
         Toast.makeText(getApplicationContext(),"Item Removed..!",Toast.LENGTH_SHORT).show();
-    });//todo
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,13 +73,11 @@ public class MainActivity5 extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main5);
 
-//        refreshOrder();//todo
         swipeContainer2 = findViewById(R.id.swipeContainer2);
         swipeContainer2.setOnRefreshListener(this::refreshOrder);
         swipeContainer2.setColorSchemeResources(android.R.color.holo_orange_light);
 
         socp ss1=socp.getInstance(this);
-//        Log.d("7878787878",ss.toString());
         ss1.getSocket().on("listen_order_status",listionOS);
 
         plc_odr=findViewById(R.id.plc_odr);
@@ -106,7 +105,6 @@ public class MainActivity5 extends AppCompatActivity
                     if (i<mal-1) {s2=s2.concat(",");}
                 }
                 s2=s2.concat("}");
-//                Log.d("****************************************************",s2);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -140,14 +138,7 @@ public class MainActivity5 extends AppCompatActivity
         C_Name.setText(Cname);
 
         t_i=findViewById(R.id.t_i);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
-//        List<Order> Olist = new ArrayList<>();//todo
-//        Olist.add(new Order("1","tid","Schezwan Noodles","3","Spicy","Order"));
-//        Olist.add(new Order("1","tid","Schezwan Fried Rice","2","","Process"));
-//        Olist.add(new Order("1","tid","Paneer Fried Rice","1","","Order"));
-//        Olist.add(new Order("1","tid","Paneer Manchurian Dry","3","","Tacking"));
-//        Olist.add(new Order("1","tid","Veg Momos","3","Extra Cheese","Deliver"));
-//        Olist.add(new Order("1","tid","Momos Chutney","3","Spicy","Order"));
+
         t_i.setLayoutManager(gridLayoutManager);
 
         itemNT=findViewById(R.id.itemNT);
@@ -170,7 +161,7 @@ public class MainActivity5 extends AppCompatActivity
             else {
                 Olist.add(new Order(Tno,Tid,i_name,i_qty,i_note,"Taking","61dfef6242b75ad557216a17"));
                 t_i.getAdapter().notifyDataSetChanged();
-//                    order_list(Tno,Tid,i_name,i_qty,i_note,"Tacking");
+
                 Toast.makeText(getApplicationContext(), "Item: "+i_name+"("+i_qty+") "+"added.", Toast.LENGTH_SHORT).show();
             }
             itemCty.setText("");
@@ -179,11 +170,6 @@ public class MainActivity5 extends AppCompatActivity
             itemNT.setText("");
         });
 
-//        OrderListAdapter orderListAdapter=new OrderListAdapter(Olist, this, position -> {
-//            Olist.remove(position);
-//            t_i.getAdapter().notifyDataSetChanged();
-//            Toast.makeText(getApplicationContext(),"Item Removed..!",Toast.LENGTH_SHORT).show();
-//        });
         t_i.setAdapter(orderListAdapter);
         //AutoCompleteTextView
         itemNA = findViewById(R.id.itemNA);
@@ -217,32 +203,20 @@ public class MainActivity5 extends AppCompatActivity
             }
             int size = itemList.size();
             String[] itemArray = itemList.toArray(new String[size]);
-//                Log.d("itemArray",itemArray.toString());
             ArrayAdapter<String> adapter4 = new ArrayAdapter<>(MainActivity5.this, android.R.layout.simple_list_item_1, itemArray);
             itemNA.setAdapter(adapter4);
         });
         itemNA.setOnItemClickListener((adapterView, view, i, l) -> {
             String item = adapterView.getItemAtPosition(i).toString();
-
-            // create Toast with user selected value
-//                Toast.makeText(getApplicationContext(), "Item: \t" + item, Toast.LENGTH_LONG).show();
-
-            // set user selected value to the TextView
             itemNA.setText(item);
         });
         qtyNA.setOnItemClickListener((adapterView, view, i, l) -> {
             String qty = adapterView.getItemAtPosition(i).toString();
-
-            // create Toast with user selected value
-//                Toast.makeText(getApplicationContext(), "Quantity: \t" + qty, Toast.LENGTH_LONG).show();
-
-            // set user selected value to the TextView
             qtyNA.setText(qty);
         });
         plc_odr.setOnClickListener(view -> {
 
             String url_addOrder =getString(R.string.base_url)+"/order/addOrder";
-//                Map<String, String> itemOrder= new HashMap<>();
             JSONArray itemAll=new JSONArray();
             for (int j3 = 0; j3 < Olist.size(); j3++) {
                 Map<String, String> itemOrder= new HashMap<>();
@@ -256,17 +230,17 @@ public class MainActivity5 extends AppCompatActivity
                     itemOrder.put("waiter","61dfef6242b75ad557216a17");   //TODO: waiter id change.
                     itemAll.put(new JSONObject(itemOrder));
                 }
-
-
-//                    Log.d("888888888888888888", String.valueOf(Olist.get(j3).I_Name));
-//                    Log.d("484848484848",itemWithId.get(String.valueOf(Olist.get(j3).I_Name)));
             }
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST,
-                    url_addOrder, itemAll,
+            JSONObject orderall=new JSONObject();
+            try {
+                orderall.put("order",itemAll);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.POST,
+                    url_addOrder, orderall,
                     response -> {
-//                                        Log.d(TAG, response.toString());
-//                                        msgResponse.setText(response.toString());
-//                                        hideProgressDialog();
+                        refreshOrder();
                     },
                     error -> {
 
@@ -278,33 +252,11 @@ public class MainActivity5 extends AppCompatActivity
                     params.put("key","value");
                     return params;
                 }
-
-
-
-
             };
             RequestQueue queue1 = Volley.newRequestQueue(getApplicationContext());
             queue1.add(jsonArrayRequest);
 
-//            for (int i = 0; i < Olist.size(); i++) {
-//                if(Olist.get(i).I_State.equals("Taking")){
-//                    Olist.get(i).I_State="Order";
-//                }
-//            }//todo
-
-            refreshOrder();//todo************************
-//            t_i.getAdapter().notifyDataSetChanged();//todo
             Toast.makeText(getApplicationContext(),"Order place succsessfully...!!",Toast.LENGTH_SHORT).show();
-
-//                Map<String, String> cTableState= new HashMap<>();
-//                cTableState.put("tableNo",Tno);
-//                cTableState.put("status","Busy");
-//
-//                socket.emit("change_table_status", new JSONObject(cTableState));
-//                socket.on("listenStatus",listionS);
-
-//                Olist.removeAll(Olist);
-//                refreshOrder();//todo
 
         });
     }
@@ -326,77 +278,58 @@ public class MainActivity5 extends AppCompatActivity
         Olist.removeAll(Olist);
         String url_tableNo=getString(R.string.base_url)+"/table/getTableNumber/"+Tno;
 
-        JsonObjectRequest jorr = new JsonObjectRequest(Request.Method.GET,url_tableNo,null, response -> {
-            try {
-                C_Name.setText(response.getJSONObject("message").getJSONObject("customer").getString("name"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            int oldOrderLength = 0;
-            try {
-                oldOrderLength = response.getJSONObject("message").getJSONArray("order").length();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        JsonObjectRequest jorr = new JsonObjectRequest(Request.Method.GET,
+                url_tableNo,
+                null,
+                response -> {
+                    try {
+                        C_Name.setText(response.getJSONObject("message").getJSONObject("customer").getString("name"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("78787878",String.valueOf(response));
+                    int oldOrderLength = 0;
+                    try {
+                        oldOrderLength = response.getJSONObject("message").getJSONArray("order").length();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-//            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
-//            List<Order> Olist = new ArrayList<>();
+                    for (int i = 0; i < oldOrderLength; i++) {
+                        try {
+                            itemNames = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getJSONObject("item").getString("name");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            itemQtys = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getString("quantity");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            itemNotes = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).optString("extraDetail","");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            itemStatus = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getString("status");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            orderId = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getString("_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
+                        Olist.add(new Order(Tno,Tid,itemNames,itemQtys,itemNotes,itemStatus,orderId));
+                        t_i.getAdapter().notifyDataSetChanged();
+                    }
 
-            for (int i = 0; i < oldOrderLength; i++) {
-                try {
-                    itemNames = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getJSONObject("item").getString("name");
-//                    System.out.println(itemNames);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                },
+                error -> {
+
                 }
-                try {
-                    itemQtys = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getString("quantity");
-//                    System.out.println(itemQtys);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    itemNotes = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).optString("extraDetail","");
-//                    System.out.println(itemNotes);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    itemStatus = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getString("status");
-//                    System.out.println(itemStatus);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    orderId = response.getJSONObject("message").getJSONArray("order").getJSONObject(i).getString("_id");
-//                    System.out.println(itemStatus);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Olist.add(new Order(Tno,Tid,itemNames,itemQtys,itemNotes,itemStatus,orderId));
-                t_i.getAdapter().notifyDataSetChanged();
-            }
-
-//            list.add(new Tables("1","tid","Free"));
-//            list.add(new Tables("2","tid","Busy"));
-//            list.add(new Tables("3","tid","Payment"));
-
-//            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
-//            t_i.setLayoutManager(gridLayoutManager);
-
-//            OrderListAdapter orderListAdapter=new OrderListAdapter(Olist, this, position -> {
-//                Olist.remove(position);
-//                t_i.getAdapter().notifyDataSetChanged();
-//                Toast.makeText(getApplicationContext(),"Item Removed..!",Toast.LENGTH_SHORT).show();
-//            });
-//            t_i.setAdapter(orderListAdapter);//todo
-
-
-        }, error -> {
-
-        }
         );
         RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
         queue.add(jorr);
@@ -406,40 +339,8 @@ public class MainActivity5 extends AppCompatActivity
         else {
             swipeContainer2.setRefreshing(false);
         }
-
-
     }
     private final Emitter.Listener listionOS = args -> {
-
         refreshOrder();
-
-//            JSONObject data = (JSONObject) args[0];
-////                    Log.d("5555555555", String.valueOf(data));
-//            String lTno;
-//            String lTstatus;
-//            try {
-//                lTno = data.getString("tableNo");
-//                lTstatus = data.getString("status");
-//                Log.d("98989898989",lTstatus);
-//                mTables.get(Integer.parseInt(lTno)-1).T_state=lTstatus;
-////                Log.d("5555555555",mTables.get(Integer.parseInt(lTno)-1).T_state);//TODO table state change
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-
     };
-
-    //    private void order_list(String tno, String tid, String i_name, String i_qty, String i_note, String tacking) {
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
-//        List<Order> Olist = new ArrayList<>();
-//        Olist.add(new Order(Tno,Tid,i_name,i_qty,i_note,tacking));
-////        Olist.add(new Order("1","tid","Schezwan Noodles","3","Spicy","Order"));
-////        Olist.add(new Order("1","tid","Schezwan Fried Rice","2","","Process"));
-////        Olist.add(new Order("1","tid","Paneer Fried Rice","1","","Order"));
-////        Olist.add(new Order("1","tid","Paneer Manchurian Dry","3","","Tacking"));
-////        Olist.add(new Order("1","tid","Veg Momos","3","Extra Cheese","Deliver"));
-////        Olist.add(new Order("1","tid","Momos Chutney","3","Spicy","Order"));
-//        t_i.setLayoutManager(gridLayoutManager);
-//
-//    }
 }
