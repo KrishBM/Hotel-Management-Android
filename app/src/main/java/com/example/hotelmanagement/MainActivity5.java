@@ -41,7 +41,7 @@ public class MainActivity5 extends AppCompatActivity
     String Tno="1";
     String Tid="1";
     String Tstate="Busy";
-    String Cname;
+    String Cname,Wid="6215bcc739834430f4e38528";
     String Cno="";
     String s2="";
     int flag=0;
@@ -73,9 +73,9 @@ public class MainActivity5 extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main5);
 
-        swipeContainer2 = findViewById(R.id.swipeContainer2);
-        swipeContainer2.setOnRefreshListener(this::refreshOrder);
-        swipeContainer2.setColorSchemeResources(android.R.color.holo_orange_light);
+//        swipeContainer2 = findViewById(R.id.swipeContainer2);
+//        swipeContainer2.setOnRefreshListener(this::refreshOrder);
+//        swipeContainer2.setColorSchemeResources(android.R.color.holo_orange_light);//todo
 
         socp ss1=socp.getInstance(this);
         ss1.getSocket().on("listen_order_status",listionOS);
@@ -123,6 +123,7 @@ public class MainActivity5 extends AppCompatActivity
             Tno = T_data.get(0);
             Tid = T_data.get(1);
             Tstate = T_data.get(2);
+            Wid = T_data.get(3);
         }
         if (getIntent().hasExtra("C_data")) {
             ArrayList<String> C_data = getIntent().getExtras().getStringArrayList("C_data");
@@ -131,6 +132,7 @@ public class MainActivity5 extends AppCompatActivity
             Tstate = C_data.get(2);
             Cname = C_data.get(3);
             Cno = C_data.get(4);
+            Wid = C_data.get(5);
         }
         T2=findViewById(R.id.T2);
         T2.setText(Tno);
@@ -227,7 +229,7 @@ public class MainActivity5 extends AppCompatActivity
                     itemOrder.put("item",itemWithId.get(String.valueOf(Olist.get(j3).I_Name)));
                     itemOrder.put("tableNo",String.valueOf(Olist.get(j3).T_no));
                     itemOrder.put("quantity",String.valueOf(Olist.get(j3).I_Qty));
-                    itemOrder.put("waiter","61dfef6242b75ad557216a17");   //TODO: waiter id change.
+                    itemOrder.put("waiter",Wid);   //TODO: waiter id change.
                     itemAll.put(new JSONObject(itemOrder));
                 }
             }
@@ -337,7 +339,7 @@ public class MainActivity5 extends AppCompatActivity
             flag=1;
         }
         else {
-            swipeContainer2.setRefreshing(false);
+//            swipeContainer2.setRefreshing(false);//todo
         }
     }
     private final Emitter.Listener listionOS = args -> {

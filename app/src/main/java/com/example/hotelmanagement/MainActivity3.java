@@ -21,8 +21,8 @@ public class MainActivity3 extends AppCompatActivity {
     RecyclerView r_v;
     int TotleTable,tableNos;
     String statuss,tableids;
+    String W_id;
     int flag=0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,10 @@ public class MainActivity3 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
+        if (getIntent().hasExtra("W_data")) {
+            ArrayList<String> W_data = getIntent().getExtras().getStringArrayList("W_data");
+            W_id = W_data.get(0);
+        }
         refresh();
         swipeContainer1 = findViewById(R.id.swipeContainer1);
         swipeContainer1.setOnRefreshListener(this::refresh);
@@ -74,7 +78,7 @@ public class MainActivity3 extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                list.add(new Tables(String.valueOf(tableNos),tableids,String.valueOf(statuss)));
+                list.add(new Tables(String.valueOf(tableNos),tableids,String.valueOf(statuss),W_id));
             }
 
             r_v.setLayoutManager(gridLayoutManager);

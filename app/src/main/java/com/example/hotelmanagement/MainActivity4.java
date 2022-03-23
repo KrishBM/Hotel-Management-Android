@@ -26,11 +26,10 @@ import java.util.Objects;
 public class MainActivity4 extends AppCompatActivity {
 
     Button b1;
-    Socket socket;
     TextInputEditText TIET1,TIET2;
     String name,number;
     TextView T2;
-    String Tno,Tid,Tstate;
+    String Tno,Tid,Tstate,Wid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +46,7 @@ public class MainActivity4 extends AppCompatActivity {
         Tno= T_data.get(0);
         Tid= T_data.get(1);
         Tstate= T_data.get(2);
+        Wid=T_data.get(3);
         T2.setText(Tno);
         }
 
@@ -113,6 +113,7 @@ public class MainActivity4 extends AppCompatActivity {
                     C_data.add(Tstate);
                     C_data.add(name);
                     C_data.add(number);
+                    C_data.add(Wid);
                     i.putStringArrayListExtra("C_data", C_data);
                     startActivity(i);
                 }

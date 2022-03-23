@@ -68,14 +68,16 @@ public class TableListAdapter extends RecyclerView.Adapter<TableListAdapter.MyVi
             Intent intent2 = new Intent(mContext,MainActivity5.class);
 
             ArrayList<String> T_data=new ArrayList<String>();
-            T_data.add(tables.T_no.toString());
-            T_data.add(tables.T_id.toString());
-            T_data.add(tables.T_state.toString());
-            if (tables.T_state.toString().equals("Free")){
+            T_data.add(tables.T_no);
+            T_data.add(tables.T_id);
+            T_data.add(tables.T_state);
+            T_data.add(tables.W_id);
+
+            if (tables.T_state.equals("Free")){
                 intent1.putStringArrayListExtra("T_data", T_data);
                 mContext.startActivity(intent1);
             }
-            else if (tables.T_state.toString().equals("Busy")){
+            else if (tables.T_state.equals("Busy")){
                 intent2.putStringArrayListExtra("T_data", T_data);
                 mContext.startActivity(intent2);
             }
